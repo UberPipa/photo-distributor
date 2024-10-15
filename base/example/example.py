@@ -4,16 +4,15 @@ from base.basicProcess.basicCheck import check_type_file
 from base.basicProcess.basicData import get_full_basic_data
 from base.metaProcess.main import getEasyMeta
 from base.parsNameProcess.main import get_data_from_name
-from conf import srcDir
 
 
-def get_info_all_files() -> None:
+def get_info_all_files(source_dir) -> None:
     """
     Шаблон в цикле, в него можно пихать разные функции
     :return:
     """
     s = 0
-    for location, dirs, files in os.walk(srcDir):
+    for location, dirs, files in os.walk(source_dir):
 
         for file in os.listdir(location):
             if check_type_file(file):

@@ -1,7 +1,8 @@
 import main
 
 # Тут нужно указать корневую директорию
-srcDir = "D:\\photo\\0\\"
+#srcDir = "D:\\photo\\0\\"
+#srcDir = None
 dstDir = "D:\\photo\\1\\"
 
 photo_files = ['JPEG', 'JPG', 'PNG', ]
