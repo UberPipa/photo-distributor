@@ -1,0 +1,2 @@
+class basicDataError(Exception):
+    pass
