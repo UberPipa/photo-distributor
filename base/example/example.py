@@ -7,7 +7,7 @@ from base.parsNameProcess.main import get_data_from_name
 from conf import srcDir
 
 
-def example() -> None:
+def get_info_all_files() -> None:
     """
     Шаблон в цикле, в него можно пихать разные функции
     :return:

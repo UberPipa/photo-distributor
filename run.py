@@ -1,4 +1,4 @@
-from main import run_myPrograms
+from main import run
 
 if __name__ == '__main__':
-    run_myPrograms()
+    run()
