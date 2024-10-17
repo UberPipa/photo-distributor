@@ -23,9 +23,6 @@ def get_info_all_files(source_dir) -> None:
                 type_file = basic_data['type_file']
                 location_file = basic_data['location_file']
 
-                #convertor(basic_data)
-
-
                 meta = getEasyMeta(basic_data)
                 date = get_data_from_name(basic_data)
 

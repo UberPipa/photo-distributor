@@ -5,6 +5,8 @@ import conf
 from base.example.example import get_info_all_files
 import argparse
 
+from m_report.report import report
+
 
 def run() -> None:
     """
@@ -16,9 +18,10 @@ def run() -> None:
     #parser.add_argument('input_dir', help="Директория для обработки на вход")
 
     # Параметры
-    parser.add_argument('-d', '--directory', type=str, help="Директория для обработки на вход")
+    parser.add_argument('-d', '--directory', type=str, required=True,  help="Директория для обработки на вход")
     parser.add_argument('-i', '--info', action='store_true', help="В указанной директории пробегает по каждому файлу и выводит по нему информацию.")
-    parser.add_argument('-sM', '--sorting-meta', action='store_true', help="В указанной директории выполняет сортировку файлов по месяцам и годам исходя из метаданных.")
+    parser.add_argument('-r', '--report', action='store_true', help="По указанной директории выводит побробную информацию по всем файлам.")
+    #parser.add_argument('-sM', '--sorting-meta', action='store_true', help="В указанной директории выполняет сортировку файлов по месяцам и годам исходя из метаданных.")
     #parser.add_argument('-sN', '--sorting-name', action='store_true', help="В указанной директории выполняет сортировку файлов по месяцам и годам исходя из имени файлов.")
 
 
@@ -39,5 +42,8 @@ def run() -> None:
     # Проверяем флаг -i
     if args.info:
         get_info_all_files(source_dir)
+
+    if args.report:
+        report(source_dir)
 
 

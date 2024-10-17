@@ -4,9 +4,7 @@ from datetime import datetime, timedelta
 
 def meta_process_FFMPEG(basic_data) -> bool | str:
     """
-
         Функция пытается получить метаданные с помощью FFMPEG
-
     """
 
     # Искомы тег
