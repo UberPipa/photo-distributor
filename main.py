@@ -5,6 +5,7 @@ import conf
 from base.example.example import get_info_all_files
 import argparse
 
+from m_rename.rename import rename_for_meta, rename_for_name
 from m_report.report import report
 from m_sorting.sorting import sorting_for_meta, sorting_for_name
 
@@ -24,6 +25,9 @@ def run() -> None:
     parser.add_argument('-r', '--report', action='store_true', help="По указанной директории выводит побробную информацию по всем файлам.")
     parser.add_argument('-sM', '--sorting-meta', action='store_true', help="В указанной директории выполняет сортировку файлов по месяцам и годам исходя из метаданных.")
     parser.add_argument('-sN', '--sorting-name', action='store_true', help="В указанной директории выполняет сортировку файлов по месяцам и годам исходя из имени файлов.")
+    parser.add_argument('-rM', '--rename-meta', action='store_true',help="В указанной директории выполняет переименование файлы в формат 2013-01-01_21-21-09.JPEG, исходя из метаданных.")
+    parser.add_argument('-rN', '--rename-name', action='store_true',help="В указанной директории выполняет переименование файлы в формат 2013-01-01_21-21-09.JPEG, исходя из имени файлов.")
+
 
     # Парсим
     args = parser.parse_args()
@@ -42,6 +46,7 @@ def run() -> None:
         if args.report:
             report(source_dir)
 
+
         # Обработка сортировки
         if args.sorting_meta and args.sorting_name:
             print("Ошибка: нельзя использовать одновременно сортировку по метаданным и по имени.")
@@ -52,5 +57,17 @@ def run() -> None:
         elif args.sorting_name:
             print("Выполняется сортировка файлов по имени.")
             sorting_for_name(source_dir)
+
+
+        # Обработка переименования
+        if args.rename_meta and args.rename_name:
+            print("Ошибка: нельзя использовать одновременно переименование по метаданным и по имени.")
+            sys.exit(1)
+        elif args.rename_meta:
+            print("Выполняется переименование файлов по метаданным.")
+            rename_for_meta(source_dir)
+        elif args.rename_name:
+            print("Выполняется сортировка файлов по имени.")
+            rename_for_name(source_dir)
 
 
