@@ -69,7 +69,7 @@ def insideMetaIMG(basic_data):
     location_file = basic_data['location_file']
 
     date = get_data_from_name(basic_data)
-
+    #print(date)
     # Удаляем все мета данные из файла
     # Открываем изображение
     image = Image.open(location_file)
