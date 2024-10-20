@@ -52,6 +52,7 @@ def get_str_from_name(basic_data) -> Union[bool, str]:
     pattern_9 = re.search(r'\bScreenshot_\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}-\d+\b', name)
     pattern_10 = re.findall(r'photo\d{8}', name)
     pattern_11 = re.search(r'^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}', name)
+    pattern_12 = re.search(r'(VID|IMG)_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}', name)
 
 
     if pattern_1:
@@ -229,6 +230,19 @@ def get_str_from_name(basic_data) -> Union[bool, str]:
         if chek_date(pattern_11, mask):
             """ Пробуем преобразовать в дату и время по маске """
             date = pattern_11
+        else:
+            date = False
+        pass
+        return date
+
+    elif pattern_12:
+        """ Ищет в форматах IMG_2016-08-10_17-51-02 """
+        pattern_12 = re.findall(r'\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}', name)
+        pattern_12 = ' '.join(pattern_12)
+        mask = '%Y-%m-%d_%H-%M-%S'
+        if chek_date(pattern_12, mask):
+            """ Пробуем преобразовать в дату и время по маске """
+            date = pattern_12
         else:
             date = False
         pass
