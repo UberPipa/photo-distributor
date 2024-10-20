@@ -5,6 +5,7 @@ import conf
 from base.example.example import get_info_all_files
 import argparse
 
+from m_inside_meta.imside_meta import insideMeta
 from m_rename.rename import rename_for_meta, rename_for_name
 from m_report.report import report
 from m_sorting.sorting import sorting_for_meta, sorting_for_name
@@ -25,8 +26,9 @@ def run() -> None:
     parser.add_argument('-r', '--report', action='store_true', help="По указанной директории выводит побробную информацию по всем файлам.")
     parser.add_argument('-sM', '--sorting-meta', action='store_true', help="В указанной директории выполняет сортировку файлов по месяцам и годам исходя из метаданных.")
     parser.add_argument('-sN', '--sorting-name', action='store_true', help="В указанной директории выполняет сортировку файлов по месяцам и годам исходя из имени файлов.")
-    parser.add_argument('-rM', '--rename-meta', action='store_true',help="В указанной директории выполняет переименование файлы в формат 2013-01-01_21-21-09.JPEG, исходя из метаданных.")
-    parser.add_argument('-rN', '--rename-name', action='store_true',help="В указанной директории выполняет переименование файлы в формат 2013-01-01_21-21-09.JPEG, исходя из имени файлов.")
+    parser.add_argument('-rM', '--rename-meta', action='store_true', help="В указанной директории выполняет переименование файлы в формат 2013-01-01_21-21-09.JPEG, исходя из метаданных.")
+    parser.add_argument('-rN', '--rename-name', action='store_true', help="В указанной директории выполняет переименование файлы в формат 2013-01-01_21-21-09.JPEG, исходя из имени файлов.")
+    parser.add_argument('-iM', '--inside-meta', action='store_true', help="Добавляет метаданные в фото и видео, берёт из имени файла.")
 
 
     # Парсим
@@ -69,5 +71,10 @@ def run() -> None:
         elif args.rename_name:
             print("Выполняется сортировка файлов по имени.")
             rename_for_name(source_dir)
+
+
+        if args.inside_meta:
+            print("Выполняется добавление метаданных в фото и видео.")
+            insideMeta(source_dir)
 
 
