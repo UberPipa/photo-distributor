@@ -12,7 +12,7 @@ from base.basicProcess.basicData import get_full_basic_data
 from base.parsNameProcess.main import get_data_from_name
 
 
-def insideMetaVID(basic_data):
+def insideMetaVID_no_CUDA(basic_data):
     """
     Интерирует метаданные из имени в файл,
     Копирует видео в ту же папку с новыми заголовками.
@@ -40,6 +40,56 @@ def insideMetaVID(basic_data):
             stream,
             temp_file,  # Сохраняем во временный файл
             vcodec='libx264',
+            preset='slow',
+            crf=18,
+            acodec='aac',
+            audio_bitrate='192k',
+            metadata=f'creation_time={new_datetime}',  # Устанавливаем дату съёмки как creation_time
+            y='-y'
+        )
+
+        # Запускаем ffmpeg
+        ffmpeg.run(stream, overwrite_output=True)
+
+        # Удаляем старое видео
+        os.remove(location_file)
+
+        # Переименовываем временный файл в оригинальное имя
+        os.rename(temp_file, location_file)
+
+        # Устанавливаем даты создания и изменения файла на уровне файловой системы
+        new_timestamp = date_object.timestamp()
+        os.utime(location_file, (new_timestamp, new_timestamp))  # Устанавливаем atime и mtime
+
+
+def insideMetaVID(basic_data):
+    """
+    Интерирует метаданные из имени в файл,
+    Копирует видео в ту же папку с новыми заголовками.
+    Старое видео удаляется.
+    """
+    full_name = basic_data['full_name']
+    name = basic_data['name']
+    extension = basic_data['extension']
+    type_file = basic_data['type_file']
+    location_file = basic_data['location_file']
+
+    date = get_data_from_name(basic_data)
+
+    if date:
+        # Подготавливаем дату
+        date_object = datetime.strptime(date, "%Y-%m-%d_%H-%M-%S")
+        new_datetime = date_object.strftime("%Y-%m-%dT%H:%M:%S")
+
+        # Создаем временное имя файла для нового видео
+        temp_file = os.path.join(os.path.dirname(location_file), f"{name}_temp.{extension}")
+
+        # Копируем видео с новыми метаданными и аппаратным ускорением GPU
+        stream = ffmpeg.input(location_file)
+        stream = ffmpeg.output(
+            stream,
+            temp_file,  # Сохраняем во временный файл
+            vcodec='h264_nvenc',  # Используем NVENC для аппаратного кодирования на GPU
             preset='slow',
             crf=18,
             acodec='aac',

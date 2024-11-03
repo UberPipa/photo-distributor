@@ -31,6 +31,8 @@ def run() -> None:
     parser.add_argument('-rM', '--rename-meta', action='store_true', help="В указанной директории выполняет переименование файлы в формат 2013-01-01_21-21-09.JPEG, исходя из метаданных.")
     parser.add_argument('-rN', '--rename-name', action='store_true', help="В указанной директории выполняет переименование файлы в формат 2013-01-01_21-21-09.JPEG, исходя из имени файлов.")
     parser.add_argument('-iM', '--inside-meta', action='store_true', help="Добавляет метаданные в фото и видео, берёт из имени файла.")
+    # По умолчанию перевёл обработку на CUDA видеокарты, но функцию не удалял.
+    #parser.add_argument('-iMC', '--inside-meta-cuda', action='store_true', help="Добавляет метаданные в фото и видео, берёт из имени файла, задействуется видеокарта.")
     parser.add_argument('-dF', '--delete-folder', action='store_true', help="В указанной директории удаляет все пустые папки и подпапки.")
     parser.add_argument('-mU', '--move-up', action='store_true', help="В указанной директории перемещает все файлы из подпапок в корневую.")
     parser.add_argument('-mUD', '--move-up-delete', action='store_true',help="В указанной директории перемещает все файлы из подпапок в корневую, затем удаляет пустые директории.")
@@ -79,6 +81,7 @@ def run() -> None:
             rename_for_name(source_dir)
 
         if args.inside_meta:
+            # По умолчанию перевёл на куда ядра, функцию старую оставил
             print("Выполняется добавление метаданных в фото и видео.")
             insideMeta(source_dir)
 
