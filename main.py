@@ -1,10 +1,13 @@
 import os
 import sys
-
-import conf
-from base.example.example import get_info_all_files
 import argparse
 
+
+# Получаем текущую директорию, где находится exe или скрипт
+default_directory = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
+
+
+from base.example.example import get_info_all_files
 from m_inside_meta.imside_meta import insideMeta
 from m_rename.rename import rename_for_meta, rename_for_name
 from m_report.report import report
@@ -17,11 +20,9 @@ def run() -> None:
     :return:
     """
     parser = argparse.ArgumentParser(description="Консольная утилита для обработки фото и видео файлов")
-    # Позиционные аргументы
-    #parser.add_argument('input_dir', help="Директория для обработки на вход")
 
     # Параметры
-    parser.add_argument('-d', '--directory', type=str, required=True,  help="Директория для обработки на вход")
+    parser.add_argument('-d', '--directory', type=str, default=default_directory, help="Директория для обработки на вход. По умолчанию – директория, где находится .exe файл.")
     parser.add_argument('-i', '--info', action='store_true', help="В указанной директории пробегает по каждому файлу и выводит по нему информацию.")
     parser.add_argument('-r', '--report', action='store_true', help="По указанной директории выводит побробную информацию по всем файлам.")
     parser.add_argument('-sM', '--sorting-meta', action='store_true', help="В указанной директории выполняет сортировку файлов по месяцам и годам исходя из метаданных.")
