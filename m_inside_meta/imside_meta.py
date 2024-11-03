@@ -44,8 +44,7 @@ def insideMetaVID(basic_data):
             crf=18,
             acodec='aac',
             audio_bitrate='192k',
-            metadata=f'creation_time={new_datetime}',
-            c='copy',
+            metadata=f'creation_time={new_datetime}',  # Устанавливаем дату съёмки как creation_time
             y='-y'
         )
 
@@ -58,10 +57,14 @@ def insideMetaVID(basic_data):
         # Переименовываем временный файл в оригинальное имя
         os.rename(temp_file, location_file)
 
+        # Устанавливаем даты создания и изменения файла на уровне файловой системы
+        new_timestamp = date_object.timestamp()
+        os.utime(location_file, (new_timestamp, new_timestamp))  # Устанавливаем atime и mtime
+
 
 def insideMetaIMG(basic_data):
     """
-    Интерирует метаданные из имени в файл
+    Интерирует метаданные из имени в файл.
     """
     full_name = basic_data['full_name']
     name = basic_data['name']
@@ -69,13 +72,10 @@ def insideMetaIMG(basic_data):
     type_file = basic_data['type_file']
     location_file = basic_data['location_file']
 
-
     date = get_data_from_name(basic_data)
 
     if date:
-        #print(date)
-        # Удаляем все мета данные из файла
-        # Открываем изображение
+        # Удаляем все метаданные из файла
         image = Image.open(location_file)
         image.getexif().clear()
 
@@ -91,8 +91,10 @@ def insideMetaIMG(basic_data):
         date_object = datetime.strptime(date, "%Y-%m-%d_%H-%M-%S")
         new_datetime = date_object.strftime("%Y:%m:%d %H:%M:%S")
 
-        exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = new_datetime
-        exif_dict["Exif"][piexif.ExifIFD.DateTimeDigitized] = new_datetime
+        # Устанавливаем дату съёмки, создания и изменения
+        exif_dict["Exif"][piexif.ExifIFD.DateTimeOriginal] = new_datetime  # Дата съёмки
+        exif_dict["Exif"][piexif.ExifIFD.DateTimeDigitized] = new_datetime  # Дата оцифровки
+        exif_dict["0th"][piexif.ImageIFD.DateTime] = new_datetime  # Дата создания и изменения
 
         # Преобразуем метаданные в бинарную строку
         exif_bytes = piexif.dump(exif_dict)
@@ -105,6 +107,10 @@ def insideMetaIMG(basic_data):
 
         # Переименовываем временный файл в оригинальное имя
         os.rename(temp_file, location_file)
+
+        # Устанавливаем даты создания и изменения файла
+        new_timestamp = date_object.timestamp()
+        os.utime(location_file, (new_timestamp, new_timestamp))  # Установка mtime и atime
 
 
 def insideMeta(source_dir) -> None:
