@@ -12,7 +12,7 @@ from base.basicProcess.basicData import get_full_basic_data
 from base.parsNameProcess.main import get_data_from_name
 
 
-def insideMetaVID_no_CUDA(basic_data):
+def insideMetaVID(basic_data):
     """
     Интерирует метаданные из имени в файл,
     Копирует видео в ту же папку с новыми заголовками.
@@ -62,7 +62,7 @@ def insideMetaVID_no_CUDA(basic_data):
         os.utime(location_file, (new_timestamp, new_timestamp))  # Устанавливаем atime и mtime
 
 
-def insideMetaVID(basic_data):
+def insideMetaVID_CUDA(basic_data):
     """
     Интерирует метаданные из имени в файл,
     Копирует видео в ту же папку с новыми заголовками.
