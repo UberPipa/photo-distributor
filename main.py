@@ -2,6 +2,7 @@ import os
 import sys
 import argparse
 
+from base.otherProcess.main import clearFolderDIr, move_files_to_main_dir, findAlienFiles
 
 # Получаем текущую директорию, где находится exe или скрипт
 default_directory = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(__file__)
@@ -30,6 +31,12 @@ def run() -> None:
     parser.add_argument('-rM', '--rename-meta', action='store_true', help="В указанной директории выполняет переименование файлы в формат 2013-01-01_21-21-09.JPEG, исходя из метаданных.")
     parser.add_argument('-rN', '--rename-name', action='store_true', help="В указанной директории выполняет переименование файлы в формат 2013-01-01_21-21-09.JPEG, исходя из имени файлов.")
     parser.add_argument('-iM', '--inside-meta', action='store_true', help="Добавляет метаданные в фото и видео, берёт из имени файла.")
+    parser.add_argument('-dF', '--delete-folder', action='store_true', help="В указанной директории удаляет все пустые папки и подпапки.")
+    parser.add_argument('-mU', '--move-up', action='store_true', help="В указанной директории перемещает все файлы из подпапок в корневую.")
+    parser.add_argument('-mUD', '--move-up-delete', action='store_true',help="В указанной директории перемещает все файлы из подпапок в корневую, затем удаляет пустые директории.")
+    parser.add_argument('-fA', '--find-alien', action='store_true',help="В указанной директории поиск файлов, которые не числятся в списке и перемещение их в папку Strangers корневой папки.")
+
+
 
 
     # Парсим
@@ -49,7 +56,6 @@ def run() -> None:
         if args.report:
             report(source_dir)
 
-
         # Обработка сортировки
         if args.sorting_meta and args.sorting_name:
             print("Ошибка: нельзя использовать одновременно сортировку по метаданным и по имени.")
@@ -60,7 +66,6 @@ def run() -> None:
         elif args.sorting_name:
             print("Выполняется сортировка файлов по имени.")
             sorting_for_name(source_dir)
-
 
         # Обработка переименования
         if args.rename_meta and args.rename_name:
@@ -73,9 +78,26 @@ def run() -> None:
             print("Выполняется сортировка файлов по имени.")
             rename_for_name(source_dir)
 
-
         if args.inside_meta:
             print("Выполняется добавление метаданных в фото и видео.")
             insideMeta(source_dir)
+
+        if args.delete_folder:
+            print("Выполняется удаление пустых директорий.")
+            clearFolderDIr(source_dir)
+
+        if args.move_up:
+            print("Выполняется перемещение всех файлов в корневую директорию.")
+            move_files_to_main_dir(source_dir)
+
+        if args.move_up_delete:
+            print("Выполняется перемещение всех файлов в корневую директорию, затем пустые папки будут удалены")
+            move_files_to_main_dir(source_dir)
+            clearFolderDIr(source_dir)
+
+        if args.find_alien:
+            print("Выполняется поиск чужеродных файлов")
+            findAlienFiles(source_dir)
+
 
 
