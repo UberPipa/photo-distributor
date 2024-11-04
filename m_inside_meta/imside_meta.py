@@ -201,6 +201,8 @@ def insideMeta_lite(source_dir):
                     new_timestamp = date_object.timestamp()
                     os.utime(location_file, (new_timestamp, new_timestamp))  # Установка mtime и atime
 
+                    s += 1
+
     print(f"Всего переписал \"Время изминения\": {s}.")
 
 
