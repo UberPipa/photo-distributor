@@ -9,7 +9,7 @@ default_directory = os.path.dirname(sys.executable) if getattr(sys, 'frozen', Fa
 
 
 from base.example.example import get_info_all_files
-from m_inside_meta.imside_meta import insideMeta
+from m_inside_meta.imside_meta import insideMeta, insideMeta_lite
 from m_rename.rename import rename_for_meta, rename_for_name
 from m_report.report import report
 from m_sorting.sorting import sorting_for_meta, sorting_for_name
@@ -31,6 +31,7 @@ def run() -> None:
     parser.add_argument('-rM', '--rename-meta', action='store_true', help="В указанной директории выполняет переименование файлы в формат 2013-01-01_21-21-09.JPEG, исходя из метаданных.")
     parser.add_argument('-rN', '--rename-name', action='store_true', help="В указанной директории выполняет переименование файлы в формат 2013-01-01_21-21-09.JPEG, исходя из имени файлов.")
     parser.add_argument('-iM', '--inside-meta', action='store_true', help="Добавляет метаданные в фото и видео, берёт из имени файла.")
+    parser.add_argument('-iML', '--inside-meta-lite', action='store_true', help="Добавляет метаданные в фото и видео только на уровне файловой системы, влияет только на дату изминения. Эту функцию очень жалательно применять ко всем медиа файлам, которые имеют метаданные")
     # По умолчанию перевёл обработку на CUDA видеокарты, но функцию не удалял.
     #parser.add_argument('-iMC', '--inside-meta-cuda', action='store_true', help="Добавляет метаданные в фото и видео, берёт из имени файла, задействуется видеокарта.")
     parser.add_argument('-dF', '--delete-folder', action='store_true', help="В указанной директории удаляет все пустые папки и подпапки.")
@@ -84,6 +85,11 @@ def run() -> None:
             # По умолчанию перевёл на куда ядра, функцию старую оставил
             print("Выполняется добавление метаданных в фото и видео.")
             insideMeta(source_dir)
+
+        if args.inside_meta_lite:
+            # По умолчанию перевёл на куда ядра, функцию старую оставил
+            print("Выполняется изминение \"даты изминения\" в метаданных фото и видео.")
+            insideMeta_lite(source_dir)
 
         if args.delete_folder:
             print("Выполняется удаление пустых директорий.")

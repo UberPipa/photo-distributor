@@ -12,7 +12,7 @@ from base.basicProcess.basicData import get_full_basic_data
 from base.parsNameProcess.main import get_data_from_name
 
 
-def insideMetaVID(basic_data):
+def insideMetaVID_no_CUDA(basic_data):
     """
     Интерирует метаданные из имени в файл,
     Копирует видео в ту же папку с новыми заголовками.
@@ -62,7 +62,7 @@ def insideMetaVID(basic_data):
         os.utime(location_file, (new_timestamp, new_timestamp))  # Устанавливаем atime и mtime
 
 
-def insideMetaVID_CUDA(basic_data):
+def insideMetaVID(basic_data):
     """
     Интерирует метаданные из имени в файл,
     Копирует видео в ту же папку с новыми заголовками.
@@ -88,14 +88,25 @@ def insideMetaVID_CUDA(basic_data):
         stream = ffmpeg.input(location_file)
         stream = ffmpeg.output(
             stream,
-            temp_file,  # Сохраняем во временный файл
+            stream,
+            temp_file,
             vcodec='h264_nvenc',  # Используем NVENC для аппаратного кодирования на GPU
-            preset='slow',
-            crf=18,
-            acodec='aac',
-            audio_bitrate='192k',
+            preset='fast',         # Оптимизировано для скорости
+            cq=26,                 # Высокое качество с компромиссами для скорости
+            acodec='copy',         # Копируем оригинальный аудиопоток без перекодирования
             metadata=f'creation_time={new_datetime}',  # Устанавливаем дату съёмки как creation_time
             y='-y'
+
+            # stream,
+            # temp_file,  # Сохраняем во временный файл
+            # vcodec = 'h264_nvenc',  # Кодирование на GPU
+            # preset = 'p5',  # Высокое качество
+            # qp = 18,  # Качество
+            # b_v = '10M',  # Установленный битрейт для сохранения качества
+            # acodec = 'aac',
+            # audio_bitrate = '192k',
+            # metadata = f'creation_time={new_datetime}',  # Устанавливаем дату съёмки как creation_time
+            # y = '-y'
         )
 
         # Запускаем ffmpeg
@@ -161,6 +172,36 @@ def insideMetaIMG(basic_data):
         # Устанавливаем даты создания и изменения файла
         new_timestamp = date_object.timestamp()
         os.utime(location_file, (new_timestamp, new_timestamp))  # Установка mtime и atime
+
+
+def insideMeta_lite(source_dir):
+    """
+    Меняет дату изминения в соответвкии с датой из метаданных. Способ универсальный, поэтому подходит для всех.
+    По идее функция должна быть обязательная.
+    """
+    s = 0
+    for location, dirs, files in os.walk(source_dir):
+
+        for file in os.listdir(location):
+            if check_type_file(file):
+                basic_data = get_full_basic_data(file, location)
+                full_name = basic_data['full_name']
+                name = basic_data['name']
+                extension = basic_data['extension']
+                type_file = basic_data['type_file']
+                location_file = basic_data['location_file']
+
+                date = get_data_from_name(basic_data)
+
+                if date:
+                    # Подготавливаем дату
+                    date_object = datetime.strptime(date, "%Y-%m-%d_%H-%M-%S")
+
+                    # Устанавливаем даты создания и изменения файла
+                    new_timestamp = date_object.timestamp()
+                    os.utime(location_file, (new_timestamp, new_timestamp))  # Установка mtime и atime
+
+        print(f"Всего переписал \"Время изминения\": {s}.")
 
 
 def insideMeta(source_dir) -> None:
