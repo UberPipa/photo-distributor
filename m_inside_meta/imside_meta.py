@@ -87,27 +87,13 @@ def insideMetaVID(basic_data):
         # Копируем видео с новыми метаданными и аппаратным ускорением GPU
         stream = ffmpeg.input(location_file)
         stream = ffmpeg.output(
-            # stream,
-            # stream,
-            # temp_file,
-            # vcodec='h264_nvenc',  # Используем NVENC для аппаратного кодирования на GPU
-            # preset='fast',         # Оптимизировано для скорости
-            # cq=26,                 # Высокое качество с компромиссами для скорости
-            # acodec='copy',         # Копируем оригинальный аудиопоток без перекодирования
-            # metadata=f'creation_time={new_datetime}',  # Устанавливаем дату съёмки как creation_time
-            # y='-y'
-
             stream,
             temp_file,
-            vcodec='h264_nvenc',  # Аппаратное ускорение на GPU
-            preset='slow',  # Оптимизация качества
-            crf=16,  # Максимальное приближение к оригинальному качеству
-            pix_fmt='yuv420p',  # Совместимость с большинством устройств
-            acodec='aac',  # Перекодирование аудио для совместимости
-            audio_bitrate='192k',  # Качественный битрейт для аудио
-            metadata=f'creation_time={new_datetime}',  # Добавляем дату съёмки
-            movflags='faststart'  # Улучшение для веб-среды (перемещение заголовков в начало файла)
-
+            vcodec='copy',  # Сохраняем оригинальный видеопоток
+            acodec='aac',
+            audio_bitrate='128k',
+            metadata=f'creation_time={new_datetime}',
+            movflags='faststart'
         )
 
         # Запускаем ffmpeg
